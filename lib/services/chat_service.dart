@@ -1,6 +1,7 @@
 import 'package:chat_app/model/message.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class ChatService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -11,12 +12,13 @@ class ChatService {
     final String currentEmail = _auth.currentUser!.email.toString();
     final Timestamp timestamp = Timestamp.now();
 
-    Message newMessage = Message(
-        senderId: currentId,
-        senderEmail: currentEmail,
-        receiverId: receiverId,
-        message: message,
-        timestamp: timestamp);
+    MessageClass newMessage = MessageClass.fromMap({
+      'senderId': currentId,
+      'senderEmail': currentEmail,
+      'receiverId': receiverId,
+      'message': message,
+      'timestamp': timestamp,
+    });
 
     List<String> ids = [currentId, receiverId];
     ids.sort();
@@ -26,6 +28,13 @@ class ChatService {
         .doc(chatRoomId)
         .collection('messages')
         .add(newMessage.toMap());
+    await messagingFirebase(message);
+  }
+
+  Future<void> messagingFirebase(String message) async {
+    final firebaseMessaging = FirebaseMessaging.instance;
+    await firebaseMessaging.requestPermission(); 
+    //final fCMToken = await firebaseMessaging.getToken();
   }
 
   Stream<QuerySnapshot> getMessage(String userId, String otherUserId) {

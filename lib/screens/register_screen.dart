@@ -1,6 +1,6 @@
 import 'package:chat_app/screens/login_screen.dart';
 import 'package:chat_app/services/auth_service.dart';
-import 'package:chat_app/widgets/MyTextField.dart';
+import 'package:chat_app/widgets/my_text_field.dart';
 import 'package:chat_app/widgets/my_button.dart';
 import 'package:flutter/material.dart';
 
@@ -13,38 +13,37 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _emailController = TextEditingController();
-    final TextEditingController _passwordController = TextEditingController();
-    final TextEditingController _confirmPasswordController =
-        TextEditingController();
-    void dispose() {
-    // TODO: implement dispose
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+  @override
+  void dispose() {
     super.dispose();
     _emailController.dispose();
     _passwordController.dispose();
   }
+
   void signUp() async {
-      if (_passwordController.text != _confirmPasswordController.text) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text("Password do not match")));
-        return;
-      }
-      try {
-        String res=await AuthService().signUpUser(
-            email: _emailController.text, password: _passwordController.text);
-        if (res=="success") {
-           Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => const LoginScreen()));
-        }
-      } catch (e) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.toString())));
-      }
+    if (_passwordController.text != _confirmPasswordController.text) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Password do not match")));
+      return;
     }
+    try {
+      String res = await AuthService().signUpUser(
+          email: _emailController.text, password: _passwordController.text);
+      if (res == "success") {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => const LoginScreen()));
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    
-    
     return Scaffold(
       backgroundColor: const Color(0xFF7C81AD),
       body: SingleChildScrollView(

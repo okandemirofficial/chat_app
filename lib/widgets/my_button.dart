@@ -11,14 +11,14 @@ class MyButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: MediaQuery.of(context).size.width * 0.4,
-        padding: EdgeInsets.all(15),
-        margin: EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.all(15),
+        margin: const EdgeInsets.only(top: 20),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20), color: Colors.white),
         child: Center(
           child: Text(
             text,
-            style: TextStyle(
+            style: const TextStyle(
                 color: Color(0xFF4B527E),
                 fontWeight: FontWeight.bold,
                 fontSize: 22),

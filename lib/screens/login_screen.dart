@@ -2,7 +2,7 @@ import 'package:chat_app/screens/home_screen.dart';
 import 'package:chat_app/screens/register_screen.dart';
 import 'package:chat_app/services/auth_service.dart';
 import 'package:chat_app/widgets/my_button.dart';
-import 'package:chat_app/widgets/MyTextField.dart';
+import 'package:chat_app/widgets/my_text_field.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -17,7 +17,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _emailController.dispose();
     _passwordController.dispose();
@@ -35,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("${e.toString()}"),
+          content: Text("$e"),
         ),
       );
     }
@@ -72,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   text: 'Login',
                 ),
                 Padding(
-                  padding:MediaQuery.of(context).size.width>700? EdgeInsets.symmetric(vertical: 20): EdgeInsets.symmetric(
+                  padding:MediaQuery.of(context).size.width>700? const EdgeInsets.symmetric(vertical: 20): EdgeInsets.symmetric(
                       vertical: MediaQuery.of(context).size.width * 0.2),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
