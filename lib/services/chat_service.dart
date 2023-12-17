@@ -12,17 +12,39 @@ class ChatService {
     final String currentEmail = _auth.currentUser!.email.toString();
     final Timestamp timestamp = Timestamp.now();
 
-    MessageClass newMessage = MessageClass.fromMap({
-      'senderId': currentId,
-      'senderEmail': currentEmail,
-      'receiverId': receiverId,
-      'message': message,
-      'timestamp': timestamp,
-    });
+    MessageClass newMessage = MessageClass(
+      senderId: currentId,
+      senderEmail: currentEmail,
+      receiverId: receiverId,
+      message: message,
+      timestamp: timestamp,
+    );
+
+    // MessageClass(
+    //   message: message,
+    //   senderId: currentId,
+    //   senderEmail:
+    // );
+
+    // Map<String, dynamic> newMessage = {};
+    // newMessage['senderId'] = currentId;
+    // newMessage['senderEmail'] = currentEmail;
+    // newMessage['receiverId'] = receiverId;
+    // newMessage['message'] = message;
+    // newMessage['timestamp'] = timestamp;
+
+    // newMessage = {
+    //   'senderId': currentId,
+    //   'senderEmail': currentEmail,
+    //   'receiverId': receiverId,
+    //   'message': message,
+    //   'timestamp': timestamp,
+    // };
 
     List<String> ids = [currentId, receiverId];
     ids.sort();
     String chatRoomId = ids.join("_");
+
     await _firestore
         .collection('chat_rooms')
         .doc(chatRoomId)
@@ -33,7 +55,7 @@ class ChatService {
 
   Future<void> messagingFirebase(String message) async {
     final firebaseMessaging = FirebaseMessaging.instance;
-    await firebaseMessaging.requestPermission(); 
+    await firebaseMessaging.requestPermission();
     //final fCMToken = await firebaseMessaging.getToken();
   }
 

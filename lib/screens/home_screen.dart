@@ -43,36 +43,45 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildUserList() {
     return StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection("users").snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return const Text("error");
-          }
-          if ((snapshot.data?.docs ?? []).isEmpty) {
-            return const Text("empty");
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Text("Loading");
-          }
-          //success
-          return ListView(
-            children: snapshot.data!.docs
-                .map<Widget>((doc) => _buildUserListItem(doc))
-                .toList(),
-          );
-        });
+      stream: FirebaseFirestore.instance.collection("users").snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return const Text("error");
+        }
+        if ((snapshot.data?.docs ?? []).isEmpty) {
+          return const Text("empty");
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Text("Loading");
+        }
+        //success
+
+        //okani burda sileceksin
+
+        final mapList = snapshot.data!.docs
+            .toList()
+            .map((e) => e.data() as Map<String, dynamic>)
+            .toList();
+
+        final item =
+            mapList.firstWhere((i) => i['email'] == _auth.currentUser?.email);
+        mapList.remove(item);
+
+        debugPrint(snapshot.data!.docs.toList().toString());
+
+        final classList = mapList.map((e) => UserClass.fromMap(e));
+
+        return ListView(
+          children:
+              classList.map<Widget>((doc) => _buildUserListItem(doc)).toList(),
+        );
+      },
+    );
   }
 
-  Widget _buildUserListItem(DocumentSnapshot document) {
-    Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
-    UserClass user = UserClass.fromMap(data);
-
-    String? currentUserEmail = _auth.currentUser?.email;
-    if (currentUserEmail != null && user.email == currentUserEmail) {
-      // kullanıcının maili listeden çıktı 
-      data.remove('email');
-      return Container(); // Burada boş bir Container döndürerek ListTile oluşturmayı engelliyoruz burda null hatası almamak için yapıldı
-    }
+  //nefise
+  //gizem
+  Widget _buildUserListItem(UserClass user) {
     return ListTile(
       title: Container(
         padding: const EdgeInsets.all(20),
@@ -82,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
             color: const Color(0xFF7C81AD)),
         child: Center(
             child: Text(
-          user.email, 
+          user.email,
           style: const TextStyle(color: Colors.white, fontSize: 18),
         )),
       ),
